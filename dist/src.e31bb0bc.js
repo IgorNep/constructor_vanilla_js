@@ -190,14 +190,7 @@ module.exports = reloadCSS;
         module.hot.dispose(reloadCSS);
         module.hot.accept(reloadCSS);
       
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"main.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"assets/bmw.png":[function(require,module,exports) {
-module.exports = "/bmw.6713db4a.png";
-},{}],"utils.js":[function(require,module,exports) {
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"utils.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -206,6 +199,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.row = row;
 exports.col = col;
 exports.css = css;
+exports.block = block;
 
 function row(content) {
   var styles = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
@@ -219,12 +213,20 @@ function col(content) {
 function css() {
   var styles = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
-  var toString = function toString(key) {
-    return "".concat(key, ":").concat(styles[key]);
-  };
+  if (typeof styles !== 'string') {
+    var _toString = function _toString(key) {
+      return "".concat(key, ":").concat(styles[key]);
+    };
 
-  var arr = Object.keys(styles).map(toString).join(';');
-  return arr;
+    var arr = Object.keys(styles).map(_toString).join(';');
+    return arr;
+  }
+
+  return styles;
+}
+
+function block(type) {
+  return "<form>\n          <h5>".concat(type, "</h5>\n                          <div class=\"form-group\">\n                              <input type=\"text\" class=\"form-control form-control-sm\" placeholder=\"value\" name=\"value\"/>\n                          </div>\n                          <div class=\"form-group\">\n                              <input type=\"text\" class=\"form-control form-control-sm\" placeholder=\"styles\" name=\"styles\"/>\n                          </div>\n              <input type=\"submit\" value=\"\u0414\u043E\u0431\u0430\u0432\u0438\u0442\u044C\" class=\"btn btn-sm btn-primary\"/>\n                       </form>\n                       <hr />");
 }
 },{}],"classes/Block.js":[function(require,module,exports) {
 "use strict";
@@ -375,7 +377,9 @@ var ImageBlock = /*#__PURE__*/function (_Block4) {
 }(Block);
 
 exports.ImageBlock = ImageBlock;
-},{"../utils":"utils.js"}],"model.js":[function(require,module,exports) {
+},{"../utils":"utils.js"}],"assets/bmw.png":[function(require,module,exports) {
+module.exports = "/bmw.6713db4a.png";
+},{}],"model.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -420,21 +424,135 @@ var model = [new _Block.TitleBlock('Простой конструктор на �
   alt: 'Это BMW'
 })];
 exports.model = model;
-},{"./assets/bmw.png":"assets/bmw.png","./classes/Block":"classes/Block.js"}],"index.js":[function(require,module,exports) {
+},{"./assets/bmw.png":"assets/bmw.png","./classes/Block":"classes/Block.js"}],"classes/Sidebar.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Sidebar = void 0;
+
+var _utils = require("../utils");
+
+var _Block = require("./Block");
+
+var _model = require("../model");
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Sidebar = /*#__PURE__*/function () {
+  function Sidebar(selector, updateCallback) {
+    _classCallCheck(this, Sidebar);
+
+    this.element = document.querySelector(selector);
+    this.updateCallback = updateCallback;
+    this.element.addEventListener('submit', this.add.bind(this));
+    this.init();
+  }
+
+  _createClass(Sidebar, [{
+    key: "init",
+    value: function init() {
+      this.element.insertAdjacentHTML('afterbegin', this.template);
+    }
+  }, {
+    key: "add",
+    value: function add(e) {
+      e.preventDefault();
+      var type = e.target.name;
+      var value = e.target.value.value;
+      var styles = e.target.styles.value;
+      var newBlock = type === 'text' ? new _Block.TextBlock(value, {
+        styles: styles
+      }) : new _Block.TitleBlock(value, {
+        styles: styles
+      });
+      console.log(newBlock);
+      this.updateCallback(newBlock);
+      e.target.value.value = '';
+      e.target.styles.value = '';
+    }
+  }, {
+    key: "template",
+    get: function get() {
+      return [(0, _utils.block)('text'), (0, _utils.block)('title')].join('');
+    }
+  }]);
+
+  return Sidebar;
+}();
+
+exports.Sidebar = Sidebar;
+},{"../utils":"utils.js","./Block":"classes/Block.js","../model":"model.js"}],"classes/Site.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Site = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Site = /*#__PURE__*/function () {
+  function Site(selector) {
+    _classCallCheck(this, Site);
+
+    this.element = document.querySelector(selector);
+  }
+
+  _createClass(Site, [{
+    key: "render",
+    value: function render(model) {
+      var _this = this;
+
+      this.element.innerHTML = '';
+      model.forEach(function (block) {
+        _this.element.insertAdjacentHTML('beforeend', block.toHTML());
+      });
+    }
+  }]);
+
+  return Site;
+}();
+
+exports.Site = Site;
+},{}],"main.css":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("bootstrap/dist/css/bootstrap.min.css");
+
+var _Sidebar = require("./classes/Sidebar");
+
+var _Site = require("./classes/Site");
 
 require("./main.css");
 
 var _model = require("./model");
 
-var site = document.querySelector('#site');
+var site = new _Site.Site('#site');
 
-_model.model.forEach(function (block) {
-  site.insertAdjacentHTML('beforeend', block.toHTML());
-});
-},{"bootstrap/dist/css/bootstrap.min.css":"../node_modules/bootstrap/dist/css/bootstrap.min.css","./main.css":"main.css","./model":"model.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+var updateModel = function updateModel(contact) {
+  _model.model.push(contact);
+
+  site.render(_model.model);
+};
+
+new _Sidebar.Sidebar('#panel', updateModel);
+site.render(_model.model);
+},{"bootstrap/dist/css/bootstrap.min.css":"../node_modules/bootstrap/dist/css/bootstrap.min.css","./classes/Sidebar":"classes/Sidebar.js","./classes/Site":"classes/Site.js","./main.css":"main.css","./model":"model.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -462,7 +580,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "7764" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "11235" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
