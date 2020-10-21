@@ -28,8 +28,18 @@ export class Sidebar {
         : new TitleBlock(value, { styles });
     console.log(newBlock);
     this.updateCallback(newBlock);
-
+    this.addToLocalStorage(newBlock);
     e.target.value.value = '';
     e.target.styles.value = '';
+  }
+  addToLocalStorage(newBlock) {
+    let model;
+    if (localStorage.getItem('model') === null) {
+      model = [];
+    } else {
+      model = JSON.parse(localStorage.getItem('model'));
+    }
+    model.push(newBlock);
+    localStorage.setItem('model', JSON.stringify(model));
   }
 }

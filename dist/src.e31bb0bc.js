@@ -190,7 +190,14 @@ module.exports = reloadCSS;
         module.hot.dispose(reloadCSS);
         module.hot.accept(reloadCSS);
       
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"utils.js":[function(require,module,exports) {
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"main.css":[function(require,module,exports) {
+var reloadCSS = require('_css_loader');
+
+module.hot.dispose(reloadCSS);
+module.hot.accept(reloadCSS);
+},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"assets/bmw.png":[function(require,module,exports) {
+module.exports = "/bmw.6713db4a.png";
+},{}],"utils.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -377,9 +384,7 @@ var ImageBlock = /*#__PURE__*/function (_Block4) {
 }(Block);
 
 exports.ImageBlock = ImageBlock;
-},{"../utils":"utils.js"}],"assets/bmw.png":[function(require,module,exports) {
-module.exports = "/bmw.6713db4a.png";
-},{}],"model.js":[function(require,module,exports) {
+},{"../utils":"utils.js"}],"model.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -424,7 +429,48 @@ var model = [new _Block.TitleBlock('Простой конструктор на �
   alt: 'Это BMW'
 })];
 exports.model = model;
-},{"./assets/bmw.png":"assets/bmw.png","./classes/Block":"classes/Block.js"}],"classes/Sidebar.js":[function(require,module,exports) {
+
+if (localStorage.getItem('model') === null) {
+  localStorage.setItem('model', JSON.stringify(model));
+}
+},{"./assets/bmw.png":"assets/bmw.png","./classes/Block":"classes/Block.js"}],"classes/Site.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Site = void 0;
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var Site = /*#__PURE__*/function () {
+  function Site(selector) {
+    _classCallCheck(this, Site);
+
+    this.element = document.querySelector(selector);
+  }
+
+  _createClass(Site, [{
+    key: "render",
+    value: function render(model) {
+      var _this = this;
+
+      this.element.innerHTML = '';
+      model.forEach(function (block) {
+        _this.element.insertAdjacentHTML('beforeend', block.toHTML());
+      });
+    }
+  }]);
+
+  return Site;
+}();
+
+exports.Site = Site;
+},{}],"classes/Sidebar.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -473,8 +519,23 @@ var Sidebar = /*#__PURE__*/function () {
       });
       console.log(newBlock);
       this.updateCallback(newBlock);
+      this.addToLocalStorage(newBlock);
       e.target.value.value = '';
       e.target.styles.value = '';
+    }
+  }, {
+    key: "addToLocalStorage",
+    value: function addToLocalStorage(newBlock) {
+      var model;
+
+      if (localStorage.getItem('model') === null) {
+        model = [];
+      } else {
+        model = JSON.parse(localStorage.getItem('model'));
+      }
+
+      model.push(newBlock);
+      localStorage.setItem('model', JSON.stringify(model));
     }
   }, {
     key: "template",
@@ -487,13 +548,17 @@ var Sidebar = /*#__PURE__*/function () {
 }();
 
 exports.Sidebar = Sidebar;
-},{"../utils":"utils.js","./Block":"classes/Block.js","../model":"model.js"}],"classes/Site.js":[function(require,module,exports) {
+},{"../utils":"utils.js","./Block":"classes/Block.js","../model":"model.js"}],"classes/App.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.Site = void 0;
+exports.App = void 0;
+
+var _Site = require("../classes/Site");
+
+var _Sidebar = require("../classes/Sidebar");
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -501,58 +566,49 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-var Site = /*#__PURE__*/function () {
-  function Site(selector) {
-    _classCallCheck(this, Site);
+var App = /*#__PURE__*/function () {
+  function App(model) {
+    _classCallCheck(this, App);
 
-    this.element = document.querySelector(selector);
+    this.model = model;
+    this.init();
   }
 
-  _createClass(Site, [{
-    key: "render",
-    value: function render(model) {
+  _createClass(App, [{
+    key: "init",
+    value: function init() {
       var _this = this;
 
-      this.element.innerHTML = '';
-      model.forEach(function (block) {
-        _this.element.insertAdjacentHTML('beforeend', block.toHTML());
-      });
+      var site = new _Site.Site('#site');
+
+      var updateModel = function updateModel(contact) {
+        _this.model.push(contact);
+
+        site.render(_this.model);
+      };
+
+      new _Sidebar.Sidebar('#panel', updateModel);
+      site.render(this.model);
     }
   }]);
 
-  return Site;
+  return App;
 }();
 
-exports.Site = Site;
-},{}],"main.css":[function(require,module,exports) {
-var reloadCSS = require('_css_loader');
-
-module.hot.dispose(reloadCSS);
-module.hot.accept(reloadCSS);
-},{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"index.js":[function(require,module,exports) {
+exports.App = App;
+},{"../classes/Site":"classes/Site.js","../classes/Sidebar":"classes/Sidebar.js"}],"index.js":[function(require,module,exports) {
 "use strict";
 
 require("bootstrap/dist/css/bootstrap.min.css");
-
-var _Sidebar = require("./classes/Sidebar");
-
-var _Site = require("./classes/Site");
 
 require("./main.css");
 
 var _model = require("./model");
 
-var site = new _Site.Site('#site');
+var _App = require("./classes/App");
 
-var updateModel = function updateModel(contact) {
-  _model.model.push(contact);
-
-  site.render(_model.model);
-};
-
-new _Sidebar.Sidebar('#panel', updateModel);
-site.render(_model.model);
-},{"bootstrap/dist/css/bootstrap.min.css":"../node_modules/bootstrap/dist/css/bootstrap.min.css","./classes/Sidebar":"classes/Sidebar.js","./classes/Site":"classes/Site.js","./main.css":"main.css","./model":"model.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+new _App.App(_model.model);
+},{"bootstrap/dist/css/bootstrap.min.css":"../node_modules/bootstrap/dist/css/bootstrap.min.css","./main.css":"main.css","./model":"model.js","./classes/App":"classes/App.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -580,7 +636,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "11235" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "12992" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};

@@ -5,6 +5,7 @@ import {
   ImageBlock,
   ColumnsBlock,
 } from './classes/Block';
+
 export const model = [
   new TitleBlock('Простой конструктор на чистом JavaScript', {
     tag: 'h1',
@@ -48,3 +49,7 @@ export const model = [
     alt: 'Это BMW',
   }),
 ];
+
+if (localStorage.getItem('model') === null) {
+  localStorage.setItem('model', JSON.stringify(model));
+}
