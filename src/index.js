@@ -1,6 +1,7 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './main.css';
-import image from './assets/bmw.png';
+import img from './assets/bmw.png';
+import { col, row } from './utils';
 
 const site = document.querySelector('#site');
 
@@ -34,6 +35,7 @@ const model = [
       'Первая колонка с контентом',
       ' Вторая колонка с контентом',
       'Третья колонка с контентом',
+      'Четвертая колонка с текстом',
     ],
     options: {
       styles: {
@@ -44,7 +46,7 @@ const model = [
   },
   {
     type: 'image',
-    value: image,
+    value: img,
     options: {
       styles: {
         color: 'red',
@@ -64,44 +66,29 @@ model.forEach((block) => {
   let html = '';
 
   if (block.type === 'title') {
-    html = `
-    <div class="row">
-        <div class="col">
-            <h1>${block.value}</h1>
-        </div>
-    </div>    
-`;
+    html = title(block);
   } else if (block.type === 'text') {
-    html = `
-    <div class="row">
-        <div class="col">
-            <p>${block.value}</p>
-        </div>
-    </div>    
-`;
+    html = text(block);
   } else if (block.type === 'columns') {
-    html = `
-    <div class="row">
-        <div class="col">
-            <p>Это текст который ни о чем не говорит</p>
-        </div>
-        <div class="col">
-            <p>Это текст который ни о чем не говорит</p>
-        </div>
-        <div class="col">
-            <p>Это текст который ни о чем не говорит</p>
-        </div>
-    </div>
-`;
+    html = columns(block);
   } else if (block.type === 'image') {
-    html = `
-    <div class="row">
-        <div class="col">
-        <img src="${block.value}" >
-        </div>
-    </div>    
-`;
+    html = image(block);
   }
 
   site.insertAdjacentHTML('beforeend', html);
 });
+
+function title(block) {
+  return row(col(`<h1>${block.value}</h1>`));
+}
+function text(block) {
+  return row(col(` <p>${block.value}</p>`));
+}
+
+function columns(block) {
+  let html = block.value.map((item) => col(`<p>${item}</p>`)).join('');
+  return row(`${html}`);
+}
+function image(block) {
+  return row(col(`<img src="${block.value}" >`));
+}

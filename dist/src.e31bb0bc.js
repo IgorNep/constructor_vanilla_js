@@ -197,6 +197,22 @@ module.hot.dispose(reloadCSS);
 module.hot.accept(reloadCSS);
 },{"_css_loader":"../node_modules/parcel-bundler/src/builtins/css-loader.js"}],"assets/bmw.png":[function(require,module,exports) {
 module.exports = "/bmw.6713db4a.png";
+},{}],"utils.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.row = row;
+exports.col = col;
+
+function row(content) {
+  return "<div class=\"row\">".concat(content, "</div>");
+}
+
+function col(content) {
+  return "<div class=\"col-sm\">".concat(content, "</div>");
+}
 },{}],"index.js":[function(require,module,exports) {
 "use strict";
 
@@ -205,6 +221,8 @@ require("bootstrap/dist/css/bootstrap.min.css");
 require("./main.css");
 
 var _bmw = _interopRequireDefault(require("./assets/bmw.png"));
+
+var _utils = require("./utils");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -232,7 +250,7 @@ var model = [{
   }
 }, {
   type: 'columns',
-  value: ['Первая колонка с контентом', ' Вторая колонка с контентом', 'Третья колонка с контентом'],
+  value: ['Первая колонка с контентом', ' Вторая колонка с контентом', 'Третья колонка с контентом', 'Четвертая колонка с текстом'],
   options: {
     styles: {
       color: 'green',
@@ -259,18 +277,37 @@ model.forEach(function (block) {
   var html = '';
 
   if (block.type === 'title') {
-    html = "\n    <div class=\"row\">\n        <div class=\"col\">\n            <h1>".concat(block.value, "</h1>\n        </div>\n    </div>    \n");
+    html = title(block);
   } else if (block.type === 'text') {
-    html = "\n    <div class=\"row\">\n        <div class=\"col\">\n            <p>".concat(block.value, "</p>\n        </div>\n    </div>    \n");
+    html = text(block);
   } else if (block.type === 'columns') {
-    html = "\n    <div class=\"row\">\n        <div class=\"col\">\n            <p>\u042D\u0442\u043E \u0442\u0435\u043A\u0441\u0442 \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043D\u0438 \u043E \u0447\u0435\u043C \u043D\u0435 \u0433\u043E\u0432\u043E\u0440\u0438\u0442</p>\n        </div>\n        <div class=\"col\">\n            <p>\u042D\u0442\u043E \u0442\u0435\u043A\u0441\u0442 \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043D\u0438 \u043E \u0447\u0435\u043C \u043D\u0435 \u0433\u043E\u0432\u043E\u0440\u0438\u0442</p>\n        </div>\n        <div class=\"col\">\n            <p>\u042D\u0442\u043E \u0442\u0435\u043A\u0441\u0442 \u043A\u043E\u0442\u043E\u0440\u044B\u0439 \u043D\u0438 \u043E \u0447\u0435\u043C \u043D\u0435 \u0433\u043E\u0432\u043E\u0440\u0438\u0442</p>\n        </div>\n    </div>\n";
+    html = columns(block);
   } else if (block.type === 'image') {
-    html = "\n    <div class=\"row\">\n        <div class=\"col\">\n        <img src=\"".concat(block.value, "\" >\n        </div>\n    </div>    \n");
+    html = image(block);
   }
 
   site.insertAdjacentHTML('beforeend', html);
 });
-},{"bootstrap/dist/css/bootstrap.min.css":"../node_modules/bootstrap/dist/css/bootstrap.min.css","./main.css":"main.css","./assets/bmw.png":"assets/bmw.png"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
+
+function title(block) {
+  return (0, _utils.row)((0, _utils.col)("<h1>".concat(block.value, "</h1>")));
+}
+
+function text(block) {
+  return (0, _utils.row)((0, _utils.col)(" <p>".concat(block.value, "</p>")));
+}
+
+function columns(block) {
+  var html = block.value.map(function (item) {
+    return (0, _utils.col)("<p>".concat(item, "</p>"));
+  }).join('');
+  return (0, _utils.row)("".concat(html));
+}
+
+function image(block) {
+  return (0, _utils.row)((0, _utils.col)("<img src=\"".concat(block.value, "\" >")));
+}
+},{"bootstrap/dist/css/bootstrap.min.css":"../node_modules/bootstrap/dist/css/bootstrap.min.css","./main.css":"main.css","./assets/bmw.png":"assets/bmw.png","./utils":"utils.js"}],"../node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
 var OldModule = module.bundle.Module;
@@ -298,7 +335,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "6577" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "7355" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
