@@ -1,29 +1,54 @@
+import { row, col, css } from '../utils';
 class Block {
-  constructor(title, value, options) {
-    this.title = title;
+  constructor(value, options) {
     this.value = value;
     this.options = options;
   }
+  toHTML() {
+    throw error('Метод toHTML должен быть реализован');
+  }
 }
-class TitleBlock extends Block {
+export class TitleBlock extends Block {
   constructor(value, options) {
     super(value, options);
+  }
+  toHTML() {
+    const { styles } = this.options;
+    return row(col(`<h1>${this.value}</h1>`), css(styles));
   }
 }
 
-class TextBlock extends Block {
+export class TextBlock extends Block {
   constructor(value, options) {
     super(value, options);
   }
+  toHTML() {
+    const { styles } = this.options;
+    return row(col(` <p>${this.value}</p>`), css(styles));
+  }
 }
-class ColumnsBlock extends Block {
+export class ColumnsBlock extends Block {
   constructor(value, options) {
     super(value, options);
+  }
+  toHTML() {
+    const { styles } = this.options;
+    let html = this.value.map(col).join('');
+    return row(`${html}`, css(styles));
   }
 }
 
-class ImageBlock extends Block {
+export class ImageBlock extends Block {
   constructor(value, options) {
     super(value, options);
+  }
+  toHTML() {
+    const { styles, imageStyles, alt } = this.options;
+    return row(
+      col(
+        `<img src="${this.value}" style="${css(imageStyles)}" alt="${alt}" >`
+      ),
+      css(styles)
+    );
   }
 }
